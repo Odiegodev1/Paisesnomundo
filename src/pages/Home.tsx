@@ -12,7 +12,7 @@ interface Country {
 function Home() {
   const [countries, setCountries] = useState<Country[]>([]);
   const [search, setSearch] = useState("");
-  const [sortByPopulation, setSortByPopulation] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,7 +35,7 @@ function Home() {
     .filter((country) =>
       country.name.toLowerCase().includes(search.toLowerCase())
     )
-    .sort((a, b) => (sortByPopulation ? b.population - a.population : 0));
+    .sort((a, b) => ( b.population - a.population ));
 
   return (
     <main className="w-full h-full bg-zinc-800">
