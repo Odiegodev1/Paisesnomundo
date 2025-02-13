@@ -64,60 +64,52 @@ function About() {
   }, [code]);
 
   return (
-    <main className="w-full h-[1100px] bg-zinc-800">
-      <header className="h-14 px-56 bg-zinc-700 border-b-2 border-zinc-600 flex items-center p-8 gap-4 text-zinc-200">
+    <main className="w-full min-h-screen bg-zinc-800">
+      <header className="h-14 px-4 md:px-20 lg:px-56 bg-zinc-700 border-b-2 border-zinc-600 flex items-center p-8 gap-4 text-zinc-200">
         <img src={Logo} className="w-10" alt="Logo" />
-        <h1 className="text-xl text-center font-bold">Países pelo Mundo</h1>
+        <h1 className="text-lg md:text-xl text-center font-bold">Países pelo Mundo</h1>
       </header>
 
       {country ? (
-        <div className="mt-20">
-          <h1 className="text-4xl font-bold text-zinc-200 text-center">{country.name}</h1>
+        <div className="mt-10 px-4 md:px-20 lg:px-56">
+          <h1 className="text-2xl md:text-4xl font-bold text-zinc-200 text-center">{country.name}</h1>
 
-          <section className="flex flex-col px-56 py-8">
+          <section className="flex flex-col py-8">
             <button
               onClick={() => navigate("/")}
-              className="flex items-center gap-2 text-zinc-200 cursor-pointer"
+              className="flex items-center gap-2 text-zinc-200 cursor-pointer mb-6"
             >
               <IoIosArrowRoundBack /> Voltar
             </button>
 
-            <div className="flex gap-10 mt-10">
-              <div className="px-10 flex flex-col gap-2 text-xl font-bold text-zinc-200">
-                <p>
-                  🏙️ Capital: <span className="text-md font-normal">{country.capital}</span>
-                </p>
-                <p>
-                  🗺️ Continente: <span className="text-md font-normal">{country.continent}</span>
-                </p>
-                <p>
-                  👨‍👩‍👧‍👦 População: <span className="text-md font-normal">{country.population}</span>
-                </p>
-                <p>
-                  🗣️ Línguas faladas: <span className="text-md font-normal">{country.languages}</span>
-                </p>
+            <div className="flex flex-col md:flex-row gap-6 md:gap-10 items-center">
+              <div className="flex flex-col gap-2 text-lg md:text-xl font-bold text-zinc-200">
+                <p>🏙️ Capital: <span className="text-md font-normal">{country.capital}</span></p>
+                <p>🗺️ Continente: <span className="text-md font-normal">{country.continent}</span></p>
+                <p>👨‍👩‍👧‍👦 População: <span className="text-md font-normal">{country.population}</span></p>
+                <p>🗣️ Línguas faladas: <span className="text-md font-normal">{country.languages}</span></p>
               </div>
 
               <img
                 src={country.flag}
                 alt={`Bandeira de ${country.name}`}
-                className="w-1/2 mt-10 border-2 border-zinc-600 rounded-lg"
+                className="w-full md:w-1/2 border-2 border-zinc-600 rounded-lg"
               />
             </div>
 
             {/* Países que fazem fronteira */}
-            <div className="mt-20">
-              <h1 className="text-2xl font-semibold text-zinc-200">Países que fazem fronteira</h1>
-              <div className="grid grid-cols-5 gap-8 mt-10">
+            <div className="mt-10">
+              <h1 className="text-xl md:text-2xl font-semibold text-zinc-200">Países que fazem fronteira</h1>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-8 mt-6 md:mt-10">
                 {borderCountries.length > 0 ? (
                   borderCountries.map((border) => (
                     <div key={border.code} className="flex flex-col items-center">
                       <img
                         src={border.flag}
                         alt={`Bandeira de ${border.name}`}
-                        className="w-24 h-16 object-cover border border-zinc-600 rounded-md"
+                        className="w-20 h-12 md:w-24 md:h-16 object-cover border border-zinc-600 rounded-md"
                       />
-                      <p className="text-zinc-200 font-bold">{border.name}</p>
+                      <p className="text-zinc-200 font-bold text-sm md:text-base">{border.name}</p>
                     </div>
                   ))
                 ) : (
