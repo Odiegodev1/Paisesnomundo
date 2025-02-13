@@ -2,8 +2,15 @@ import { useState, useEffect } from "react";
 import Logo from "../assets/Logo.svg";
 import { useNavigate } from "react-router-dom";
 
+interface Country {
+  name: string;
+  flag: string;
+  code: string;
+  population: number;
+}
+
 function Home() {
-  const [countries, setCountries] = useState([]);
+  const [countries, setCountries] = useState<Country[]>([]);
   const [search, setSearch] = useState("");
   const [sortByPopulation, setSortByPopulation] = useState(false);
   const navigate = useNavigate();
@@ -12,11 +19,11 @@ function Home() {
     fetch("https://restcountries.com/v3.1/all")
       .then((res) => res.json())
       .then((data) => {
-        const formattedData = data.map((country) => ({
-          name: country.translations.por?.common || country.name.common,
-          flag: country.flags.svg,
-          code: country.cca3,
-          population: country.population,
+        const formattedData: Country[] = data.map((country: any) => ({
+          name: country.translations?.por?.common || country.name.common,
+          flag: country.flags?.svg || "",
+          code: country.cca3 || "",
+          population: country.population || 0,
         }));
 
         setCountries(formattedData);
@@ -45,7 +52,6 @@ function Home() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-       
       </div>
 
       <div className="grid grid-cols-5 px-56 gap-8 py-8 mt-10">

@@ -3,39 +3,61 @@ import { useParams, useNavigate } from "react-router-dom";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import Logo from "../assets/Logo.svg";
 
+interface Country {
+  name: string;
+  flag: string;
+  capital: string;
+  continent: string;
+  population: string;
+  languages: string;
+  borders: string[];
+}
+
+interface BorderCountry {
+  name: string;
+  flag: string;
+  code: string;
+}
+
 function About() {
   const { code } = useParams();
   const navigate = useNavigate();
-  const [country, setCountry] = useState(null);
-  const [borderCountries, setBorderCountries] = useState([]);
+  const [country, setCountry] = useState<Country | null>(null);
+  const [borderCountries, setBorderCountries] = useState<BorderCountry[]>([]);
 
   useEffect(() => {
     fetch(`https://restcountries.com/v3.1/alpha/${code}`)
       .then((response) => response.json())
       .then((data) => {
-        const countryData = data[0];
-        setCountry({
-          name: countryData.translations.por?.common || countryData.name.common,
-          flag: countryData.flags.svg,
-          capital: countryData.capital?.[0] || "Não disponível",
-          continent: countryData.region,
-          population: countryData.population.toLocaleString(),
-          languages: Object.values(countryData.languages || {}).join(", "),
-          borders: countryData.borders || [],
-        });
+        if (!data || data.length === 0) return;
 
-        if (countryData.borders) {
-          fetch(`https://restcountries.com/v3.1/alpha?codes=${countryData.borders.join(",")}`)
+        const countryData = data[0];
+
+        const newCountry: Country = {
+          name: countryData.translations?.por?.common || countryData.name.common,
+          flag: countryData.flags?.svg || "",
+          capital: countryData.capital?.[0] || "Não disponível",
+          continent: countryData.region || "Não disponível",
+          population: countryData.population ? countryData.population.toLocaleString() : "Desconhecida",
+          languages: countryData.languages ? Object.values(countryData.languages).join(", ") : "Não disponível",
+          borders: countryData.borders || [],
+        };
+
+        setCountry(newCountry);
+
+        if (newCountry.borders.length > 0) {
+          fetch(`https://restcountries.com/v3.1/alpha?codes=${newCountry.borders.join(",")}`)
             .then((res) => res.json())
             .then((borderData) => {
-              setBorderCountries(
-                borderData.map((borderCountry) => ({
-                  name: borderCountry.translations.por?.common || borderCountry.name.common,
-                  flag: borderCountry.flags.svg,
-                  code: borderCountry.cca3,
-                }))
-              );
-            });
+              const formattedBorders: BorderCountry[] = borderData.map((borderCountry: any) => ({
+                name: borderCountry.translations?.por?.common || borderCountry.name.common,
+                flag: borderCountry.flags?.svg || "",
+                code: borderCountry.cca3 || "",
+              }));
+
+              setBorderCountries(formattedBorders);
+            })
+            .catch((error) => console.error("Erro ao buscar países de fronteira:", error));
         }
       })
       .catch((error) => console.error("Erro ao buscar país:", error));
@@ -61,20 +83,20 @@ function About() {
             </button>
 
             <div className="flex gap-10 mt-10">
-              <form className="px-10 flex flex-col gap-2 text-xl font-bold text-zinc-200">
-                <label>
+              <div className="px-10 flex flex-col gap-2 text-xl font-bold text-zinc-200">
+                <p>
                   🏙️ Capital: <span className="text-md font-normal">{country.capital}</span>
-                </label>
-                <label>
+                </p>
+                <p>
                   🗺️ Continente: <span className="text-md font-normal">{country.continent}</span>
-                </label>
-                <label>
+                </p>
+                <p>
                   👨‍👩‍👧‍👦 População: <span className="text-md font-normal">{country.population}</span>
-                </label>
-                <label>
+                </p>
+                <p>
                   🗣️ Línguas faladas: <span className="text-md font-normal">{country.languages}</span>
-                </label>
-              </form>
+                </p>
+              </div>
 
               <img
                 src={country.flag}
